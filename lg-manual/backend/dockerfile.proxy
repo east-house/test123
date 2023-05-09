@@ -1,0 +1,14 @@
+FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
+
+COPY ./src /src
+COPY ./requirements_proxy.txt /requirements.txt
+
+RUN apt-get -y update && \
+    apt-get -y install apt-utils gcc && \
+    pip install --no-cache-dir --upgrade -r /requirements.txt
+
+WORKDIR /src
+EXPOSE 8100
+
+CMD ["uvicorn","app:app","--host","0.0.0.0","--port","8100","--reload"]
+# CMD ["gunicorn","main:app","--workers","6","--worker-class","uvicorn.workers.UvicornWorker","--bind","0.0.0.0:8888"]

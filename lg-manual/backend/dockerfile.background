@@ -1,0 +1,13 @@
+FROM python:3.8-slim
+
+COPY ./src /src
+COPY ./requirements_background.txt /requirements.txt
+
+RUN apt-get -y update && \
+    apt-get -y install apt-utils gcc && \
+    pip install --no-cache-dir --upgrade -r /requirements.txt
+
+WORKDIR /src
+EXPOSE 8100
+
+CMD [ "python", "-m", "background.prediction_batch" ]
